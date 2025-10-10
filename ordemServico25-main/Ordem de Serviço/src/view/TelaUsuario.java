@@ -256,11 +256,14 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
     private void btnUsuCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUsuCreateActionPerformed
         
         Usuario obj = new Usuario();
+        
+        obj.setIdUser(Intenger.parseInt(txtUsuId.getText()));
         obj.setUsuario(txtUsuId.getText());
         obj.setFone(txtUsuFone.getText());
         obj.setLogin(txtUsuLogin.getText());
         obj.setSenha(txtUsuSenha.getText());
         obj.setPerfil(cboUsuPerfil.getSelectedItem().toString());
+        
         if ((txtUsuId.getText().isEmpty()) || (txtUsuNome.getText().isEmpty()) || (txtUsuLogin.getText().isEmpty()) || (txtUsuSenha.getPassword().length == 0) || cboUsuPerfil.getSelectedItem().equals(" ")) {
             JOptionPane.showMessageDialog(null, "Preencha todos os campos obrigatórios");
         } else {

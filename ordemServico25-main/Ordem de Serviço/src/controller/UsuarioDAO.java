@@ -87,4 +87,32 @@ public class UsuarioDAO {
             
             }
     }
+    public  Usuario buscarUsuario(int idUser){
+        try {
+            String sql = "select * from tbusuarios WHERE iduser = ?;";
+            conexao = ModuloConexao.conectar();
+            PreparedStatement stmt = conexao.prepareStatement(sql);
+            smtm.SetInt(1, idUser);
+            resultSet rs = smtm.executeQuery();
+            
+            smtm.close();
+            if(rs.next()){
+                Usuario usuario = new Usuario ();
+                usuario.setIdUser(rs.getInt("iduser"));
+                usuario.setUsuario(rs.geString("usuario"));
+                usuario.setFone(rs.geString("fone"));
+                usuario.setLogin(rs.geString("login"));
+                usuario.setSenha(rs.geString("senha"));
+                usuario.setPerfil(rs.geString("perfil"));
+                
+                return usuario;
+                
+            }else{
+                JOptionPane.showMessageDialog(null, "Usuário não encontrado!");
+            }
+            }catch (SQLException e) {
+                JOPtionPane.showMessageDialog(null, e);
+        }
+        return null;
+    }
 }

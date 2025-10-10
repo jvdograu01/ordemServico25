@@ -79,7 +79,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel2">
       <Properties>
-        <Property name="text" type="java.lang.String" value="@author Professor Cleber Feitosa"/>
+        <Property name="text" type="java.lang.String" value="2024110310420028"/>
       </Properties>
       <AccessibilityProperties>
         <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="@author:  Professor Jos&#xe9; de Assis"/>
@@ -102,9 +102,9 @@
         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="d7" green="78" id="Realce de Texto" palette="2" red="0" type="palette"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="cleber.feitosa@ifmt.edu.br"/>
+        <Property name="text" type="java.lang.String" value="Silva.carvalho@estudante.ifmt.edu.br"/>
         <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-          <Color id="Default Cursor"/>
+          <Color id="Cursor Padr&#xe3;o"/>
         </Property>
       </Properties>
       <Events>
