@@ -78,13 +78,13 @@ public class TelaSobre extends javax.swing.JFrame {
 
         jLabel1.setText("Sistema para gestão de serviços - Ver 1.0");
 
-        jLabel2.setText("2024110310420028");
+        jLabel2.setText("@author Professor Cleber Feitosa");
 
         jLabel3.setText("Sob a licença MIT");
 
-        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icones/mit.png"))); // NOI18N
+        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icones/frente_ifmt (1).jpg"))); // NOI18N
 
-        lblLink.setText("Silva.carvalho@estudante.ifmt.edu.br");
+        lblLink.setText("cleber.feitosa@ifmt.edu.br");
         lblLink.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         lblLink.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -100,10 +100,10 @@ public class TelaSobre extends javax.swing.JFrame {
                 .addGap(36, 36, 36)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2)
-                            .addComponent(lblLink))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblLink)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addContainerGap(88, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel3)
@@ -138,7 +138,7 @@ public class TelaSobre extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void lblLinkMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblLinkMouseClicked
-        link("https://joseassis.com.br");
+        link("https://github.com/cleberfeitosa/ordemServico25");
     }//GEN-LAST:event_lblLinkMouseClicked
 
     /**

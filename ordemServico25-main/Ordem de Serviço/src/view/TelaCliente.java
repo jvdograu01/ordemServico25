@@ -46,192 +46,10 @@ public class TelaCliente extends javax.swing.JInternalFrame {
      */
     public TelaCliente() {
         initComponents();
-        RestrictedTextField validarCliente;
-        validarCliente = new RestrictedTextField(txtCliNome);
-        validarCliente.setLimit(50);
-        RestrictedTextField validarEndereco;
-        validarEndereco = new RestrictedTextField(txtCliEndereco);
-        validarEndereco.setLimit(100);
-        RestrictedTextField validarFone;
-        validarFone = new RestrictedTextField(txtCliFone);
-        validarFone.setLimit(15);
-        RestrictedTextField validarEmail;
-        validarEmail = new RestrictedTextField(txtCliEmail);
-        validarEmail.setLimit(50);
+        
     }
 
-    /**
-     * Método responsável por adicionar um novo cliente
-     */
-    private void adicionarCliente() {
-        String sql = "insert into tbclientes(nomecli,endcli,fonecli,emailcli) values(?,?,?,?)";
-        try {
-            conexao = ModuloConexao.conectar();
-            stm = conexao.prepareStatement(sql);
-            stm.setString(1, txtCliNome.getText());
-            stm.setString(2, txtCliEndereco.getText());
-            stm.setString(3, txtCliFone.getText());
-            if (txtCliEmail.getText().equals("")) {
-                stm.setString(4, null);
-            } else {
-                stm.setString(4, txtCliEmail.getText());
-            }
-            if ((txtCliNome.getText().isEmpty()) || (txtCliFone.getText().isEmpty())) {
-                JOptionPane.showMessageDialog(null, "Preencha todos os campos obrigatórios");
-            } else {
-                int adicionado = stm.executeUpdate();
-                if (adicionado > 0) {
-                    JOptionPane.showMessageDialog(null, "Cliente adicionado com sucesso");
-                    limpar();
-                }
-            }
-        } catch (SQLIntegrityConstraintViolationException e1) {
-            JOptionPane.showMessageDialog(null, "Email já existente.\nEscolha outro email.");
-            txtCliEmail.setText(null);
-            txtCliEmail.requestFocus();
-        } catch (HeadlessException | SQLException e) {
-            JOptionPane.showMessageDialog(null, e);
-        } finally {
-            try {
-                conexao.close();
-            } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(null, ex);
-            }
-        }
-    }
-
-    /**
-     * Método responsável pela pesquisa de clientes pelo nome com filtro
-     */
-    private void pesquisarCliente() {
-        String sql = "select idcli as id, nomecli as nome, endcli as endereço, fonecli as fone, emailcli as email from tbclientes where nomecli like ?";
-        try {
-            conexao = ModuloConexao.conectar();
-            stm = conexao.prepareStatement(sql);
-            stm.setString(1, txtCliPesquisar.getText() + "%");
-            rs = stm.executeQuery();
-            tblClientes.setModel(DbUtils.resultSetToTableModel(rs));
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, e);
-        } finally {
-            try {
-                conexao.close();
-            } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(null, ex);
-            }
-        }
-    }
-
-    /**
-     * método usado para setar os campos de texto com o conteúdo da tabela
-     */
-    private void setarCampos() {
-        int setar = tblClientes.getSelectedRow();
-        txtCliId.setText(tblClientes.getModel().getValueAt(setar, 0).toString());
-        txtCliNome.setText(tblClientes.getModel().getValueAt(setar, 1).toString());
-        txtCliEndereco.setText(tblClientes.getModel().getValueAt(setar, 2).toString());
-        txtCliFone.setText(tblClientes.getModel().getValueAt(setar, 3).toString());
-        if (tblClientes.getModel().getValueAt(setar, 4) == null){
-            txtCliEmail.setText(null);
-        } else {
-            txtCliEmail.setText(tblClientes.getModel().getValueAt(setar, 4).toString());
-        }        
-        btnAdicionar.setEnabled(false);
-        btnAlterar.setEnabled(true);
-        btnRemover.setEnabled(true);
-    }
-
-    /**
-     * Método responsável pela edição dos dados do cliente
-     */
-    private void ediitarCliente() {
-        int confirma = JOptionPane.showConfirmDialog(null, "Confima as alterações nos dados deste cliente?", "Atenção!", JOptionPane.YES_NO_OPTION);
-        if (confirma == JOptionPane.YES_OPTION) {
-            String sql = "update tbclientes set nomecli=?,endcli=?,fonecli=?,emailcli=? where idcli=?";
-            try {
-                conexao = ModuloConexao.conectar();
-                stm = conexao.prepareStatement(sql);
-                stm.setString(1, txtCliNome.getText());
-                stm.setString(2, txtCliEndereco.getText());
-                stm.setString(3, txtCliFone.getText());
-                if (txtCliEmail.getText().equals("")) {
-                stm.setString(4, null);
-            } else {
-                stm.setString(4, txtCliEmail.getText());
-            }
-                stm.setString(5, txtCliId.getText());
-                if ((txtCliNome.getText().isEmpty()) || (txtCliFone.getText().isEmpty())) {
-                    JOptionPane.showMessageDialog(null, "Preencha todos os campos obrigatórios");
-                } else {
-                    int adicionado = stm.executeUpdate();
-                    if (adicionado > 0) {
-                        JOptionPane.showMessageDialog(null, "Dados do cliente alterados com sucesso");
-                        limpar();
-                    }
-                }
-            } catch (SQLIntegrityConstraintViolationException e1) {
-                JOptionPane.showMessageDialog(null, "Email não preenchido ou já existente.\nEscolha outro email.");
-                txtCliEmail.setText(null);
-                txtCliEmail.requestFocus();
-            } catch (HeadlessException | SQLException e) {
-                JOptionPane.showMessageDialog(null, e);
-            } finally {
-                try {
-                    conexao.close();
-                } catch (SQLException ex) {
-                    JOptionPane.showMessageDialog(null, ex);
-                }
-            }
-        }
-    }
-
-    /**
-     * Método responsável por excluir um cliente
-     */
-    private void excluirCliente() {
-        int confirma = JOptionPane.showConfirmDialog(null, "Confima a exclusão deste cliente?", "Atenção!", JOptionPane.YES_NO_OPTION);
-        if (confirma == JOptionPane.YES_OPTION) {
-            String sql = "delete from tbclientes where idcli=?";
-            try {
-                conexao = ModuloConexao.conectar();
-                stm = conexao.prepareStatement(sql);
-                stm.setString(1, txtCliId.getText());
-                int apagado = stm.executeUpdate();
-                if (apagado > 0) {
-                    limpar();
-                    JOptionPane.showMessageDialog(null, "Cliente removido com sucesso");
-                }
-            } catch (SQLIntegrityConstraintViolationException e1) {
-                JOptionPane.showMessageDialog(null, "Exclusão não realizada.\nCliente possui OS pendente.");
-            } catch (HeadlessException | SQLException e2) {
-                JOptionPane.showMessageDialog(null, e2);
-
-            } finally {
-                try {
-                    conexao.close();
-                } catch (SQLException ex) {
-                    JOptionPane.showMessageDialog(null, ex);
-                }
-            }
-        }
-    }
-
-    /**
-     * Método responsável por limpar os campos e gerenciar os componentes
-     */
-    private void limpar() {
-        txtCliPesquisar.setText(null);
-        txtCliId.setText(null);
-        txtCliNome.setText(null);
-        txtCliEndereco.setText(null);
-        txtCliFone.setText(null);
-        txtCliEmail.setText(null);
-        ((DefaultTableModel) tblClientes.getModel()).setRowCount(0);
-        btnAdicionar.setEnabled(true);
-        btnAlterar.setEnabled(false);
-        btnRemover.setEnabled(false);
-    }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -275,7 +93,7 @@ public class TelaCliente extends javax.swing.JInternalFrame {
 
         jLabel5.setText("E-mail");
 
-        btnRemover.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/infox/icones/delete.png"))); // NOI18N
+        btnRemover.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icones/delete.png"))); // NOI18N
         btnRemover.setToolTipText("Excluir cliente");
         btnRemover.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnRemover.setEnabled(false);
@@ -286,7 +104,7 @@ public class TelaCliente extends javax.swing.JInternalFrame {
             }
         });
 
-        btnAlterar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/infox/icones/update.png"))); // NOI18N
+        btnAlterar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icones/update.png"))); // NOI18N
         btnAlterar.setToolTipText("Editar cliente");
         btnAlterar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnAlterar.setEnabled(false);
@@ -297,7 +115,7 @@ public class TelaCliente extends javax.swing.JInternalFrame {
             }
         });
 
-        btnAdicionar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/infox/icones/create.png"))); // NOI18N
+        btnAdicionar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icones/create.png"))); // NOI18N
         btnAdicionar.setToolTipText("Adicionar cliente");
         btnAdicionar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnAdicionar.setPreferredSize(new java.awt.Dimension(80, 80));
@@ -373,13 +191,13 @@ public class TelaCliente extends javax.swing.JInternalFrame {
                         .addComponent(txtCliEndereco, javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(txtCliEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 514, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(txtCliId, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(29, Short.MAX_VALUE))
+                .addContainerGap(30, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addGap(165, 165, 165)
                 .addComponent(btnAdicionar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(30, 30, 30)
                 .addComponent(btnAlterar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(36, 36, 36)
                 .addComponent(btnRemover, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
@@ -396,7 +214,7 @@ public class TelaCliente extends javax.swing.JInternalFrame {
                     .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
                     .addComponent(txtCliId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -430,23 +248,23 @@ public class TelaCliente extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarActionPerformed
-        adicionarCliente();
+        
     }//GEN-LAST:event_btnAdicionarActionPerformed
 
     private void txtCliPesquisarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCliPesquisarKeyReleased
-        pesquisarCliente();
+        
     }//GEN-LAST:event_txtCliPesquisarKeyReleased
 
     private void tblClientesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblClientesMouseClicked
-        setarCampos();
+        
     }//GEN-LAST:event_tblClientesMouseClicked
 
     private void btnAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlterarActionPerformed
-        ediitarCliente();
+        
     }//GEN-LAST:event_btnAlterarActionPerformed
 
     private void btnRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoverActionPerformed
-        excluirCliente();
+        
     }//GEN-LAST:event_btnRemoverActionPerformed
 
 
