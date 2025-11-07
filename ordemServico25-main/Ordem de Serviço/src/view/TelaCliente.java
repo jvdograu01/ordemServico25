@@ -47,6 +47,70 @@ public class TelaCliente extends javax.swing.JInternalFrame {
     public TelaCliente() {
         initComponents();
         
+        /**
+     * Método responsável por listar todos os clientes cadastrados na tabela!!!
+     *
+     */
+    public void listar() {
+
+        ClienteDAO dao = new ClienteDAO();
+
+        List<Cliente> lista = dao.listarCliente();
+        DefaultTableModel dados = (DefaultTableModel) tblClientes.getModel();
+        dados.setNumRows(0);
+
+        for (Cliente c : lista) {
+            dados.addRow(new Object[]{
+                c.getId(),
+                c.getNome(),
+                c.getEndereco(),
+                c.getFone(),
+                c.getEmail(),});
+        }
+
+    }
+        public List<Clientes> listarClientes() {
+        try {
+
+            //1 passo criar a lista
+            List<Clientes> lista = new ArrayList<>();
+
+            //2 passo - criar o sql , organizar e executar.
+            String sql = "select * from tb_clientes";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Clientes obj = new Clientes();
+
+                obj.setId(rs.getInt("id"));
+                obj.setNome(rs.getString("nome"));
+                obj.setRg(rs.getString("rg"));
+                obj.setCpf(rs.getString("cpf"));
+                obj.setEmail(rs.getString("email"));
+                obj.setTelefone(rs.getString("telefone"));
+                obj.setCelular(rs.getString("celular"));
+                obj.setCep(rs.getString("cep"));
+                obj.setEndereco(rs.getString("endereco"));
+                obj.setNumero(rs.getInt("numero"));
+                obj.setComplemento(rs.getString("complemento"));
+                obj.setBairro(rs.getString("bairro"));
+                obj.setCidade(rs.getString("cidade"));
+                obj.setUf(rs.getString("estado"));
+
+                lista.add(obj);
+            }
+
+            return lista;
+
+        } catch (SQLException erro) {
+
+            JOptionPane.showMessageDialog(null, "Erro :" + erro);
+            return null;
+        }
+
+    }
+        
     }
 
     
@@ -273,6 +337,14 @@ public class TelaCliente extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txtCliPesquisarKeyReleased
 
     private void tblClientesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblClientesMouseClicked
+        txtCliId.setText(tblClientes.getValueAt(tblClientes.getSelecteRow(), 0).toString());
+        txtCliNome.setText(tblClientes.getValueAt(tblClientes.getSelecteRow(), 1).toString());
+        txtCliEndereco.setText(tblClientes.getValueAt(tblClientes.getSelecteRow(), 2).toString());
+        txtCliFone.setText(tblClientes.getValueAt(tblClientes.getSelecteRow(), 3).toString());
+        txtCliEmail.setText(tblClientes.getValueAt(tblClientes.getSelecteRow(), 4).toString());
+        btnAdicionar.setEnabled(false);
+        btnAlterar.setEnabled(true);
+        btnRemover.setEnabled(true);
         
     }//GEN-LAST:event_tblClientesMouseClicked
 
