@@ -23,11 +23,12 @@
  */
 package view;
 
-
+import controller.UsuarioDAO;
 import java.sql.*;
 import jdbc.ModuloConexao;
 import java.awt.HeadlessException;
 import javax.swing.JOptionPane;
+import model.Usuario;
 
 /**
  * Tela de gestão de usuários
@@ -45,10 +46,8 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
      */
     public TelaUsuario() {
         initComponents();
-        
-    }
 
-    
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -114,9 +113,9 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
 
         jLabel6.setText("* Perfil");
 
-        cboUsuPerfil.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " ", "admin", "user" }));
+        cboUsuPerfil.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "", "admin", "user" }));
 
-        btnUsuUpdate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/infox/icones/update.png"))); // NOI18N
+        btnUsuUpdate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icones/update.png"))); // NOI18N
         btnUsuUpdate.setToolTipText("Alterar");
         btnUsuUpdate.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnUsuUpdate.setEnabled(false);
@@ -127,10 +126,9 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
             }
         });
 
-        btnUsuCreate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/infox/icones/create.png"))); // NOI18N
+        btnUsuCreate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icones/create.png"))); // NOI18N
         btnUsuCreate.setToolTipText("Adicionar");
         btnUsuCreate.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        btnUsuCreate.setEnabled(false);
         btnUsuCreate.setPreferredSize(new java.awt.Dimension(80, 80));
         btnUsuCreate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -138,7 +136,7 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
             }
         });
 
-        btnUsuDelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/infox/icones/delete.png"))); // NOI18N
+        btnUsuDelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icones/delete.png"))); // NOI18N
         btnUsuDelete.setToolTipText("Remover");
         btnUsuDelete.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnUsuDelete.setEnabled(false);
@@ -254,20 +252,64 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnUsuCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUsuCreateActionPerformed
-        
+        Usuario obj = new Usuario();
+
+        obj.setIdUser(Integer.parseInt(txtUsuId.getText()));
+        obj.setUsuario(txtUsuNome.getText());
+        obj.setFone(txtUsuFone.getText());
+        obj.setLogin(txtUsuLogin.getText());
+        obj.setSenha(txtUsuSenha.getText());
+        obj.setPerfil(cboUsuPerfil.getSelectedItem().toString());
+
+        if ((txtUsuId.getText().isEmpty()) || (txtUsuNome.getText().isEmpty()) || (txtUsuLogin.getText().isEmpty()) || (txtUsuSenha.getPassword().length == 0) || cboUsuPerfil.getSelectedItem().equals(" ")) {
+            JOptionPane.showMessageDialog(null, "Preencha todos os campos obrigatórios");
+        } else {
+            UsuarioDAO dao = new UsuarioDAO();
+            dao.adicionarUsuario(obj);
+        }
     }//GEN-LAST:event_btnUsuCreateActionPerformed
 
     private void btnUsuUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUsuUpdateActionPerformed
-        
+        Usuario obj = new Usuario();
 
+        obj.setIdUser(Integer.parseInt(txtUsuId.getText()));
+        obj.setUsuario(txtUsuNome.getText());
+        obj.setFone(txtUsuFone.getText());
+        obj.setLogin(txtUsuLogin.getText());
+        obj.setSenha(txtUsuSenha.getText());
+        obj.setPerfil(cboUsuPerfil.getSelectedItem().toString());
+
+        if ((txtUsuId.getText().isEmpty()) || (txtUsuNome.getText().isEmpty()) || (txtUsuLogin.getText().isEmpty()) || (txtUsuSenha.getPassword().length == 0) || cboUsuPerfil.getSelectedItem().equals(" ")) {
+            JOptionPane.showMessageDialog(null, "Preencha todos os campos obrigatórios");
+        } else {
+            UsuarioDAO dao = new UsuarioDAO();
+            dao.alterarUsuario(obj);
+        }
     }//GEN-LAST:event_btnUsuUpdateActionPerformed
 
     private void btnUsuDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUsuDeleteActionPerformed
-        
+
     }//GEN-LAST:event_btnUsuDeleteActionPerformed
 
     private void btnUsuReadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUsuReadActionPerformed
-       
+        if (txtUsuId.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Informe o Id do usuário");
+            txtUsuId.requestFocus();
+        } else {
+            UsuarioDAO dao = new UsuarioDAO();
+            Usuario usuario = new Usuario();
+            usuario = dao.buscarUsuario(Integer.parseInt(txtUsuId.getText()));
+
+            txtUsuNome.setText(usuario.getUsuario());
+            txtUsuLogin.setText(usuario.getLogin());
+            txtUsuSenha.setText(usuario.getSenha());
+            txtUsuFone.setText(usuario.getFone());
+            cboUsuPerfil.setSelectedItem(usuario.getPerfil());
+            btnUsuCreate.setEnabled(false);
+            btnUsuUpdate.setEnabled(true);
+            btnUsuDelete.setEnabled(true);
+        }
+
     }//GEN-LAST:event_btnUsuReadActionPerformed
 
     private void formInternalFrameActivated(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameActivated
@@ -275,11 +317,11 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_formInternalFrameActivated
 
     private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
-           
+
     }//GEN-LAST:event_formInternalFrameOpened
 
     private void jChkSenhaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jChkSenhaActionPerformed
-        
+
     }//GEN-LAST:event_jChkSenhaActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
